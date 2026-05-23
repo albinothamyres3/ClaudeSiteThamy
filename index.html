@@ -226,6 +226,7 @@ textarea{resize:vertical}
 <div id="pg-consdetalhe" class="page"></div>
 <div id="pg-consform" class="page"></div>
 <div id="pg-conshist" class="page"></div>
+<div id="pg-settings" class="page"></div>
 
 <!-- NAV -->
 <nav class="nav">
@@ -237,6 +238,7 @@ textarea{resize:vertical}
     <button class="nav-btn" onclick="nav('meds')" id="nav-meds"><span class="ico">💊</span>Meds</button>
     <button class="nav-btn" onclick="nav('peso')" id="nav-peso"><span class="ico">⚖️</span>Peso</button>
     <button class="nav-btn" onclick="nav('movs')" id="nav-movs"><span class="ico">👣</span>Movimentos</button>
+    <button class="nav-btn" onclick="nav('settings')" id="nav-settings"><span class="ico">⚙️</span>Config</button>
     <button class="nav-fab" onclick="showFAB()">+</button>
   </div>
 </nav>
@@ -474,6 +476,7 @@ function renderPage(page){
   else if(page==='meds') renderMeds();
   else if(page==='peso') renderPeso();
   else if(page==='movs') renderMovs();
+  else if(page==='settings') renderSettings();
 }
 
 function showFAB(){
@@ -1745,6 +1748,70 @@ function renderConsHist(){
       <span style="color:var(--inkSoft)">›</span>
     </div>`).join('')}
   ${!realizadas.length?'<div class="card" style="text-align:center;color:var(--inkSoft);padding:20px">Nenhuma consulta realizada ainda</div>':''}`;
+}
+
+// ============================
+// SETTINGS
+// ============================
+function renderSettings(){
+  document.getElementById('pg-settings').innerHTML=`
+  <div class="sec-header mae-header">
+    <div class="deco"></div>
+    <h2>⚙️ Configurações</h2>
+    <p>Importar e exportar dados</p>
+  </div>
+
+  <div class="card">
+    <div style="font-size:14px;font-weight:700;margin-bottom:12px">💾 Exportar dados</div>
+    <div style="font-size:13px;color:var(--inkMid);margin-bottom:12px">Baixe todos os seus dados em um arquivo JSON. Você poderá carregar em outro dispositivo.</div>
+    <button class="btn btn-mae btn-full" onclick="exportarDados()">⬇️ Exportar (JSON)</button>
+  </div>
+
+  <div class="card">
+    <div style="font-size:14px;font-weight:700;margin-bottom:12px">📤 Importar dados</div>
+    <div style="font-size:13px;color:var(--inkMid);margin-bottom:12px">Carregue um arquivo JSON previamente exportado para restaurar todos os dados.</div>
+    <input type="file" id="import-file" accept=".json" style="display:none" onchange="importarDados(event)">
+    <button class="btn btn-bebe btn-full" onclick="document.getElementById('import-file').click()">⬆️ Importar (JSON)</button>
+  </div>
+
+  <div class="card" style="background:var(--alerta-surface);border-color:var(--alerta-border)">
+    <div style="font-size:12px;color:var(--alerta)">ℹ️ Dica:</div>
+    <div style="font-size:13px;color:var(--ink);margin-top:6px">Exporte seus dados regularmente como backup. Se trocar de dispositivo, importe o arquivo aqui para continuar de onde parou.</div>
+  </div>`;
+}
+
+function exportarDados(){
+  const json=JSON.stringify(state, null, 2);
+  const blob=new Blob([json], {type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='gestacao_thamyres_'+new Date().toISOString().split('T')[0]+'.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  alert('✓ Dados exportados com sucesso!');
+}
+
+function importarDados(event){
+  const file=event.target.files[0];
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const imported=JSON.parse(e.target.result);
+      if(!imported.grupos){throw new Error('Arquivo inválido');}
+      Object.assign(state, imported);
+      saveState();
+      alert('✓ Dados importados com sucesso! Recarregando...');
+      window.location.reload();
+    }catch(err){
+      alert('❌ Erro ao importar: arquivo inválido ou corrompido');
+    }
+  };
+  reader.readAsText(file);
+  document.getElementById('import-file').value='';
 }
 
 // ============================
