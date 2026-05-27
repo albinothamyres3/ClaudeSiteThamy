@@ -306,7 +306,57 @@ function loadState(){
     const raw = localStorage.getItem('gestacao_v1');
     if(raw){ const s = JSON.parse(raw); Object.assign(state,s); return; }
   }catch(e){}
-  initDefaults();
+  // Tenta carregar dados iniciais de Thamyres (se disponível)
+  loadInitialDataThamyres();
+}
+
+function loadInitialDataThamyres(){
+  // Dados iniciais de Thamyres - importados do JSON fornecido
+  const initialData = {
+    "grupos": [
+      {"id": "mpilntzcj9db","p": 1,"nome": "Beta-HCG","data": "2026-05-20","resultado": "POSITIVO — 413 mUI/mL","status": "ok","notas": "Gestação confirmada. Iniciada em 18/04/2026.","drive": ""},
+      {"id": "mpilntzcudk0","p": 1,"nome": "Hemograma Completo","data": "2026-02-20","resultado": "Normal","status": "ok","notas": "Hemácias 3,9 | Hb 12,0 | Hematócrito 35,5% | Leuco 6.120 | Plaquetas 207k","drive": ""},
+      {"id": "mpilntzce8az","p": 1,"nome": "Metabolismo Glicêmico","data": "2026-02-20","resultado": "Excelente","status": "ok","notas": "Glicose 83 | HbA1c 5,1% | Insulina 5,7 µUI/mL","drive": ""},
+      {"id": "mpilntzcfpqb","p": 1,"nome": "Hormônios Reprodutivos","data": "2026-02-20","resultado": "Normal","status": "ok","notas": "FSH 4,31 | LH 8,50 | Estradiol 47,1 | Prolactina 22,60 | Testosterona 37,40","drive": ""},
+      {"id": "mpilntzcv82u","p": 1,"nome": "Progesterona","data": "2026-02-28","resultado": "0,86 ng/mL — fase folicular","status": "ok","notas": "","drive": ""},
+      {"id": "mpilntzcd0wp","p": 1,"nome": "Progesterona","data": "2026-03-10","resultado": "14,70 ng/mL — meio-luteal","status": "ok","notas": "Confirma ovulação","drive": ""},
+      {"id": "mpilntzcetq4","p": 1,"nome": "Tireoide","data": "2026-02-20","resultado": "Normal — TSH 1,06 | T4L 1,1","status": "ok","notas": "","drive": ""},
+      {"id": "mpilntzc3cf4","p": 1,"nome": "Tireoide","data": "2026-03-10","resultado": "Anti-Tireoglobulina 215 UI/mL","status": "alerta","notas": "Crescente 143→215, ref<40. Acompanhar endocrinologista.","drive": ""},
+      {"id": "mpilntzcwt47","p": 1,"nome": "Ferro e Vitaminas","data": "2026-02-20","resultado": "Normal","status": "ok","notas": "Ferro 65 | Ferritina 16,5 | Vit B12 563 | Vit D 41,0","drive": ""},
+      {"id": "mpilntzciwst","p": 1,"nome": "Perfil Lipídico","data": "2026-03-10","resultado": "Colesterol total 238 mg/dL","status": "alerta","notas": "CT 238 ref<190 | HDL 103 | LDL 120 | TG 48","drive": ""},
+      {"id": "mpilntzci15b","p": 1,"nome": "Imunologia","data": "2026-02-20","resultado": "Normal","status": "ok","notas": "Rubéola imunizada | Toxo neg | CMV exp.passada | Hep B/C neg | HTLV neg","drive": ""},
+      {"id": "mpilntzcb5sn","p": 1,"nome": "Ultrassom Transvaginal","data": "2026-03-02","resultado": "Normal O-RADS 1","status": "ok","notas": "Útero 68×31×49mm | Folículo dominante D 25mm","drive": ""},
+      {"id": "mpilntzc4i5l","p": 1,"nome": "Ultrassom das Mamas","data": "2026-03-02","resultado": "Normal BI-RADS 1","status": "ok","notas": "Sem nódulos | Rastreamento anual.","drive": ""},
+      {"id": "mpilntzcftv5","p": 2,"nome": "Confirmação de Gestação","data": "2026-05-20","resultado": "Confirmada","status": "ok","notas": "Beta-HCG 413 mUI/mL — 5 semanas.","drive": ""}
+    ],
+    "consultas": [
+      {"id": "mpilntzcatot","tipo": "Pré-natal","medico": "Andreia Ferreira","especialidade": "Obstetrícia","clinica": "Particular 480","endereco": "Lorena","telefone": "","data": "2026-05-26","hora": "19:30","realizada": true,"anotacoes": "Parar com ac fólico. Metilfolato - ate 12 semanas \nParar vitamina D\nEvitar comida cura.\nFadiga, transporte O2\nFrutas da estação - evitar salada de frutas.\nEvitar Suco de fruta apenas: maracuja, abacaxi com hortela.\nEvitar frutas de pico glicemico depois do almoco.\nNutricionista funcional - Maria Juliana (guara)\nAtenção apenas a sangramento\nVacina so com 20 semanas - tomar vacina h1n1\nTrocar protetor solar para de criança","perguntas": ["plano de parto e valores","exames e ultrassom","exercicios","pedido de nutricionista","laudo para nuripurum - reembolso","Vacinas que tenho que tomar","Octinoxate e filtro solar químico. Parar?","Sexagem e nipt"],"pedidos": [],"examesVinculados": []},
+      {"id": "mplh7c0wjnvs","tipo": "Pré-natal","medico": "Flavia murta","especialidade": "Ob","clinica": "Particular 370","endereco": "Campos","telefone": "","data": "2026-06-03","hora": "15:50","realizada": false,"anotacoes": "","perguntas": [],"pedidos": [],"examesVinculados": []},
+      {"id": "mplh980ayamm","tipo": "Pré-natal","medico": "Paloma Dias","especialidade": "Ob","clinica": "Plano","endereco": "Sao jose dos campos","telefone": "","data": "2026-06-15","hora": "13:40","realizada": false,"anotacoes": "","perguntas": [],"pedidos": [],"examesVinculados": []},
+      {"id": "mpmukbtelano","tipo": "Outros","medico": "Visita vivalle","especialidade": "","clinica": "","endereco": "","telefone": "","data": "2026-07-06","hora": "10:30","realizada": false,"anotacoes": "","perguntas": [],"pedidos": [],"examesVinculados": []},
+      {"id": "mpnbhgq9j7bq","tipo": "Pré-natal","medico": "Andrea Ferreira","especialidade": "Ob","clinica": "Retorno Particular","endereco": "","telefone": "","data": "2026-06-16","hora": "15:00","realizada": false,"anotacoes": "","perguntas": [],"pedidos": [],"examesVinculados": []}
+    ],
+    "meds": [
+      {"id": "mpilntzcv9rk","tipo": "continuo","nome": "Ácido Fólico","dose": "400mcg","horario": "08:00","obs": ""},
+      {"id": "mpilntzcjme6","tipo": "continuo","nome": "Vitamina D","dose": "600UI","horario": "08:00","obs": ""},
+      {"id": "mpilntzce4gk","tipo": "continuo","nome": "Omega 3","dose": "1000mg","horario": "12:00","obs": ""},
+      {"id": "mpilntzcsosd","tipo": "continuo","nome": "Colin (Supera Farma)","dose": "1 cápsula","horario": "08:00","obs": ""},
+      {"id": "mpilntzcxtfq","tipo": "continuo","nome": "DOSS (Diosmina)","dose": "1000mg","horario": "21:00","obs": ""},
+      {"id": "mpilntzclne5","tipo": "continuo","nome": "Vitamina C","dose": "1000mg","horario": "08:00","obs": ""},
+      {"id": "mpilntzc3tik","tipo": "pontual","nome": "Noripurum (Ferro IV)","dose": "2 ampolas/250ml","horario": "","obs": "Infusão IV — 22/05/2026"}
+    ],
+    "pesos": [
+      {"id": "mpilntzcmupz","data": "2026-05-10","peso": 61.8,"obs": ""},
+      {"id": "mpilntzcd00s","data": "2026-05-22","peso": 62.1,"obs": ""},
+      {"id": "mpilrlvqzsos","data": "2026-05-23","peso": 62,"obs": ""},
+      {"id": "mpjo4auuuhmh","data": "2026-05-24","peso": 61.8,"obs": ""}
+    ],
+    "pedidosMedicos": [],
+    "crescimentoBebe": [],
+    "movHist": [],
+    "saudeDiaria": {"2026-05-24": {"sono": "8","agua": "3"}}
+  };
+  Object.assign(state, initialData);
 }
 
 // ============================
@@ -1425,7 +1475,10 @@ function renderConsDetalhe(id){
   <div class="card">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
       <div style="font-size:13px;font-weight:700">📋 Pedidos médicos</div>
-      <button class="btn btn-ghost btn-sm" onclick="showAddPedido('${esc(id)}')">+ Adicionar</button>
+      <div style="display:flex;gap:4px">
+        <button class="btn btn-ghost btn-sm" onclick="showAddPedido('${esc(id)}')">+ Pedido</button>
+        <button class="btn btn-bebe btn-sm" onclick="showImportarResultadosJson('${esc(id)}')">📊 JSON</button>
+      </div>
     </div>
     ${pedidoList}
     ${!pedidos.length?'<div style="font-size:13px;color:var(--inkSoft);text-align:center;padding:10px">Nenhum pedido registrado</div>':''}
@@ -1598,15 +1651,211 @@ function showResultadoPedido(pedidoId){
   const p=state.pedidosMedicos.find(p=>p.id===pedidoId);
   if(!p) return;
   const sh=mkSheet(`Resultado: ${p.nome}`,`
-    <div class="field"><label>Resultado *</label>
-      <textarea id="res-resultado" placeholder="Descreva o resultado...">${esc(p.resultado||'')}</textarea></div>
-    <div class="field"><label>Data do resultado</label>
-      <input id="res-data" type="date" value="${p.dataResultado||today()}"></div>
-    <div class="field"><label>Link Google Drive (opcional)</label>
-      <input id="res-drive" type="url" value="${esc(p.drive||'')}"></div>
-    <button class="btn btn-mae btn-full" onclick="salvarResultadoPedido('${esc(pedidoId)}')">✓ Salvar resultado</button>
+    <div style="display:flex;gap:8px;margin-bottom:16px">
+      <button class="subtab ${document.getElementById('res-tab-manual')?'active':''}" id="res-tab-manual-btn" onclick="toggleResTab('manual')" style="flex:1;padding:8px;border-radius:8px;border:none;background:var(--mae-surface);color:var(--mae);font-weight:600;cursor:pointer">Inserir resultado</button>
+      <button class="subtab" id="res-tab-json-btn" onclick="toggleResTab('json')" style="flex:1;padding:8px;border-radius:8px;border:none;background:none;color:var(--inkSoft);font-weight:600;cursor:pointer">Importar JSON</button>
+    </div>
+    <div id="res-tab-manual">
+      <div class="field"><label>Resultado *</label>
+        <textarea id="res-resultado" placeholder="Descreva o resultado...">${esc(p.resultado||'')}</textarea></div>
+      <div class="field"><label>Data do resultado</label>
+        <input id="res-data" type="date" value="${p.dataResultado||today()}"></div>
+      <div class="field"><label>Link Google Drive (opcional)</label>
+        <input id="res-drive" type="url" value="${esc(p.drive||'')}"></div>
+      <button class="btn btn-mae btn-full" onclick="salvarResultadoPedido('${esc(pedidoId)}')">✓ Salvar resultado</button>
+    </div>
+    <div id="res-tab-json" style="display:none">
+      <div style="background:var(--bebe-surface);border-radius:10px;padding:12px;margin-bottom:12px;border:1px solid var(--bebe-border)">
+        <div style="font-size:12px;font-weight:700;color:var(--bebe);margin-bottom:6px">📊 Importar resultado em JSON</div>
+        <div style="font-size:12px;color:var(--inkMid);line-height:1.6">
+          Cole um JSON estruturado com os dados do exame. Exemplo:
+          <div style="background:#fff;border-radius:6px;padding:8px;margin-top:6px;font-family:monospace;font-size:11px;border:1px solid var(--bebe-border)">
+{<br/>
+&nbsp;&nbsp;"nome": "Beta-HCG",<br/>
+&nbsp;&nbsp;"resultado": "413 mUI/mL",<br/>
+&nbsp;&nbsp;"data": "2026-05-20",<br/>
+&nbsp;&nbsp;"status": "ok",<br/>
+&nbsp;&nbsp;"notas": "Gestação confirmada"<br/>
+}
+          </div>
+        </div>
+      </div>
+      <div class="field"><label>Cole aqui o JSON do resultado</label>
+        <textarea id="res-json" placeholder='{"nome":"Exame","resultado":"Normal","data":"2026-05-20","status":"ok","notas":""}' style="font-size:12px;font-family:monospace;min-height:120px" oninput="previewResJson(this.value)"></textarea></div>
+      <div id="res-json-preview" style="margin-bottom:12px"></div>
+      <button class="btn btn-bebe btn-full" onclick="salvarResultadoPorJson('${esc(pedidoId)}')">✓ Importar resultado</button>
+    </div>
   `);
   document.body.appendChild(sh);
+}
+
+function toggleResTab(tab){
+  if(tab==='manual'){
+    document.getElementById('res-tab-manual').style.display='block';
+    document.getElementById('res-tab-json').style.display='none';
+    document.getElementById('res-tab-manual-btn').style.background='var(--mae-surface)';
+    document.getElementById('res-tab-manual-btn').style.color='var(--mae)';
+    document.getElementById('res-tab-json-btn').style.background='none';
+    document.getElementById('res-tab-json-btn').style.color='var(--inkSoft)';
+  } else {
+    document.getElementById('res-tab-manual').style.display='none';
+    document.getElementById('res-tab-json').style.display='block';
+    document.getElementById('res-tab-manual-btn').style.background='none';
+    document.getElementById('res-tab-manual-btn').style.color='var(--inkSoft)';
+    document.getElementById('res-tab-json-btn').style.background='var(--bebe-surface)';
+    document.getElementById('res-tab-json-btn').style.color='var(--bebe)';
+  }
+}
+
+function previewResJson(val){
+  const div=document.getElementById('res-json-preview');
+  if(!div||!val.trim()){ if(div) div.innerHTML=''; return; }
+  try{
+    const raw=val.replace(/```json|```/g,'').trim();
+    const j=JSON.parse(raw);
+    const campos=['nome','resultado','data','status','notas'];
+    const presentes=campos.filter(c=>j[c]!==undefined);
+    div.innerHTML=`<div style="font-size:12px;font-weight:700;color:var(--bebe);margin-bottom:8px">✓ Dados válidos:</div>`+
+      presentes.map(c=>`<div style="display:flex;justify-content:space-between;padding:6px;background:#fff;border-radius:6px;margin-bottom:4px;border:1px solid var(--bebe-border);font-size:12px">
+        <span style="color:var(--inkSoft);font-weight:600">${c}</span>
+        <span style="color:var(--ink)">${esc(String(j[c]))}</span>
+      </div>`).join('');
+  }catch(e){ 
+    if(div) div.innerHTML='<div style="font-size:11px;color:var(--alerta);padding:8px;background:var(--alerta-surface);border-radius:6px">❌ JSON inválido</div>'; 
+  }
+}
+
+function salvarResultadoPorJson(pedidoId){
+  const jsonVal=document.getElementById('res-json').value.trim();
+  if(!jsonVal){ alert('Cole o JSON do resultado'); return; }
+  
+  try{
+    const raw=jsonVal.replace(/```json|```/g,'').trim();
+    const j=JSON.parse(raw);
+    const p=state.pedidosMedicos.find(p=>p.id===pedidoId);
+    if(!p) return;
+    
+    // Atualizar pedido
+    p.resultado=j.resultado||p.resultado||'';
+    p.dataResultado=j.data||today();
+    p.status='concluido';
+    
+    // Criar entrada em grupos com dados estruturados
+    state.grupos.push({
+      id:uid(),
+      p:1,
+      nome:j.nome||p.nome,
+      data:j.data||today(),
+      resultado:j.resultado||'',
+      status:j.status||'ok',
+      notas:j.notas||`Importado via JSON - Pedido: ${p.nome}`,
+      drive:'',
+      jsonData:j  // Armazenar dados estruturados originais
+    });
+    
+    saveState();
+    document.querySelector('.overlay')?.remove();
+    if(currentPage==='home') renderHome();
+    else if(currentPage==='consultas') renderConsultas();
+    else if(consDetalheId) renderConsDetalhe(consDetalheId);
+  }catch(err){
+    alert('❌ Erro ao importar JSON: '+err.message);
+  }
+}
+
+function showImportarResultadosJson(consId){
+  const sh=mkSheet('📊 Importar Resultados (JSON)',`
+    <div style="background:var(--mae-surface);border-radius:10px;padding:12px;margin-bottom:12px;border:1px solid var(--mae-border)">
+      <div style="font-size:12px;font-weight:700;color:var(--mae);margin-bottom:8px">Importar múltiplos exames</div>
+      <div style="font-size:12px;color:var(--inkMid);line-height:1.6">
+        Cole um JSON com um array de exames. Cada exame terá os campos: nome, resultado, data, status, notas.
+        <div style="background:#fff;border-radius:6px;padding:8px;margin-top:6px;font-family:monospace;font-size:10px;border:1px solid var(--mae-border);overflow-x:auto">
+{<br/>
+&nbsp;&nbsp;"exames": [<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"nome": "Beta-HCG",<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"resultado": "413 mUI/mL",<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"data": "2026-05-20",<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"status": "ok",<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"notas": "Positivo"<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+&nbsp;&nbsp;]<br/>
+}
+        </div>
+      </div>
+    </div>
+    <div class="field"><label>Cole aqui o JSON com os exames</label>
+      <textarea id="import-res-json" placeholder='{"exames":[{"nome":"Ultrassom","resultado":"Normal","data":"2026-05-20","status":"ok","notas":""}]}' style="font-size:12px;font-family:monospace;min-height:150px" oninput="previewImportarResultados(this.value)"></textarea></div>
+    <div id="import-res-preview" style="margin-bottom:12px"></div>
+    <button class="btn btn-mae btn-full" onclick="confirmarImportarResultados('${esc(consId)}')">✓ Importar exames</button>
+  `);
+  document.body.appendChild(sh);
+}
+
+function previewImportarResultados(val){
+  const div=document.getElementById('import-res-preview');
+  if(!div||!val.trim()){ if(div) div.innerHTML=''; return; }
+  try{
+    const raw=val.replace(/```json|```/g,'').trim();
+    const j=JSON.parse(raw);
+    const lista=j.exames||[];
+    if(!lista.length){ div.innerHTML='<div style="color:var(--alerta);font-size:12px">Nenhum exame encontrado no JSON</div>'; return; }
+    
+    div.innerHTML=`<div style="font-size:12px;font-weight:700;color:var(--mae);margin-bottom:8px">✓ ${lista.length} exame(s) identificado(s):</div>`+
+      lista.map((e,i)=>`
+      <div style="background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px;margin-bottom:8px">
+        <div style="font-size:13px;font-weight:600;color:var(--ink)">${i+1}. ${esc(e.nome||'Sem nome')}</div>
+        <div style="font-size:12px;color:var(--inkMid);margin-top:4px">
+          ${e.resultado?'<div>Resultado: '+esc(e.resultado)+'</div>':''}
+          ${e.data?'<div>Data: '+esc(e.data)+'</div>':''}
+          ${e.status?'<div>Status: <span style="display:inline-block;padding:2px 8px;border-radius:4px;background:'+(e.status==='ok'?'#e8f5e9':e.status==='alerta'?'#fff3e0':'#fff')+';color:'+(e.status==='ok'?'#2e7d32':e.status==='alerta'?'#e65100':'var(--ink)')+'">'+esc(e.status)+'</span></div>':''}
+        </div>
+      </div>`).join('');
+  }catch(e){ 
+    if(div) div.innerHTML='<div style="font-size:11px;color:var(--alerta);padding:8px;background:var(--alerta-surface);border-radius:6px">❌ JSON inválido: '+esc(e.message)+'</div>'; 
+  }
+}
+
+function confirmarImportarResultados(consId){
+  const jsonVal=document.getElementById('import-res-json').value.trim();
+  if(!jsonVal){ alert('Cole o JSON com os exames'); return; }
+  
+  try{
+    const raw=jsonVal.replace(/```json|```/g,'').trim();
+    const j=JSON.parse(raw);
+    const lista=j.exames||[];
+    if(!lista.length){ alert('Nenhum exame encontrado no JSON'); return; }
+    
+    const c=state.consultas.find(c=>c.id===consId);
+    let count=0;
+    
+    lista.forEach(e=>{
+      if(e.nome){
+        state.grupos.push({
+          id:uid(),
+          p:1,
+          nome:e.nome.trim(),
+          data:e.data||today(),
+          resultado:e.resultado||'',
+          status:e.status||'ok',
+          notas:e.notas||`Importado via JSON em ${new Date().toLocaleDateString('pt-BR')}`,
+          drive:'',
+          jsonData:e  // Armazenar dados estruturados originais
+        });
+        count++;
+      }
+    });
+    
+    saveState();
+    document.querySelector('.overlay')?.remove();
+    alert(`✓ ${count} exame(s) importado(s) com sucesso!`);
+    
+    if(currentPage==='home') renderHome();
+    else if(currentPage==='consultas') renderConsultas();
+    else if(consDetalheId) renderConsDetalhe(consDetalheId);
+  }catch(err){
+    alert('❌ Erro ao importar JSON: '+err.message);
+  }
 }
 
 function salvarResultadoPedido(pedidoId){
